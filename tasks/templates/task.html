@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To Do</title>
+</head>
+<body>
+
+<h1>Lista Task</h1>
+
+<ul>
+    {% for task in tasks %}
+        <li>{{ task.title }}</li>
+    {% empty %}
+        <li>Nessun task</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
