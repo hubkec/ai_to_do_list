@@ -1,35 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>To Do</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-
-<div class="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow">
-
-    <h1 class="text-2xl font-bold mb-2">
-        {{ task.title }}
-    </h1>
-
-    <p class="text-gray-600 mb-4">
-        {{ task.description }}
-    </p>
-
-    <p>
-        Stato:
-        {% if task.completed %}
-            <span class="text-green-500 font-semibold">Completato ✅</span>
-        {% else %}
-            <span class="text-red-500 font-semibold">Non completato ❌</span>
-        {% endif %}
-    </p>
-
-    <a href="/" class="inline-block mt-4 text-blue-500 hover:underline">
-        ← Torna alla lista
-    </a>
-
-</div>
-
-</body>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Task</title>
+    </head>
+    <body>
+        <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+            <h1 class="text-2xl font-bold mb-2">{{ task.title }}</h1>
+            <form method="POST" action="{% url 'toggle_task' task.id %}">
+                {% csrf_token %}
+                <button class="mt-2 px-3 py-1 rounded bg-blue-500 text-white">
+                    {% if task.completed %}
+                        Segna come NON completato
+                    {% else %}
+                        Segna come completato
+                    {% endif %}
+                </button>
+            </form>
+            <p class="text-gray-600">{{ task.description }}</p>
+            <a href="/" class="text-blue-500 mt-4 inline-block">← Torna alla lista</a>
+        </div>
+    </body>
 </html>
