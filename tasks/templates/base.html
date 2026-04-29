@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>
+            {% block title %}To Do{% endblock %}
+        </title>
+    </head>
+    <body class="bg-black">
+        <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

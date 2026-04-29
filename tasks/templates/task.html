@@ -1,24 +1,37 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <title>Task</title>
-    </head>
-    <body>
-        <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow">
-            <h1 class="text-2xl font-bold mb-2">{{ task.title }}</h1>
-            <form method="POST" action="{% url 'toggle_task' task.id %}">
-                {% csrf_token %}
-                <button class="mt-2 px-3 py-1 rounded bg-blue-500 text-white">
-                    {% if task.completed %}
-                        Segna come NON completato
-                    {% else %}
-                        Segna come completato
-                    {% endif %}
-                </button>
-            </form>
-            <p class="text-gray-600">{{ task.description }}</p>
-            <a href="/" class="text-blue-500 mt-4 inline-block">← Torna alla lista</a>
+{% extends "base.html" %}
+{% block title %}Task{% endblock %}
+{% block content %}
+    <div class="space-y-4">
+        <h1 class="text-2xl font-semibold text-gray-800">{{ task.title }}</h1>
+        <!-- Stato -->
+        <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-gray-500">Stato:</span>
+            {% if task.completed %}
+                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Completato</span>
+            {% else %}
+                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">In corso</span>
+            {% endif %}
         </div>
-    </body>
-</html>
+         <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-gray-500">Scadenza task:</span>
+            {% if task.expiration_date%}
+                <span>{{ task.expiration_date }}</span>
+            {% else %}
+                <span>Questo task non ha scandenza</span>
+            {% endif %}
+         </div>
+        <p class="text-gray-600">{{ task.description }}</p>
+        <form method="POST" action="{% url 'toggle_task' task.id %}">
+            {% csrf_token %}
+            <button class="w-full mt-4 py-2 rounded-lg font-medium transition {% if task.completed %} bg-red-500 hover:bg-red-600 text-white {% else %} bg-blue-500 hover:bg-blue-600 text-white {% endif %} ">
+                {% if task.completed %}
+                    Segna come NON completato
+                {% else %}
+                    Segna come completato
+                {% endif %}
+            </button>
+            <!-- Back -->
+            <a href="/"
+               class="block text-center text-sm text-gray-400 hover:text-gray-600 mt-4">← Torna alla lista</a>
+        </form>
+    {% endblock %}
