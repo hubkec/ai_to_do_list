@@ -1,33 +1,57 @@
 {% extends "base.html" %}
-{% block title %}Lista Task{% endblock %}
+
+{% block title %}To do List{% endblock %}
+
 {% block content %}
-    <div class="space-y-4">
-        <h1 class="text-2xl font-semibold text-gray-800">Lista Task</h1>
-       <form method="POST" action="{% url 'create_task' %}">
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-4 text-center">To do List</h1>
+
+        <form method="POST" action="{% url 'create_task' %}" class="mb-8">
             {% csrf_token %}
-            <button class="w-full mt-4 py-2 rounded-lg font-medium transition bg-blue-500 hover:bg-blue-600 text-white">
-                    Crea task
+            <button type="submit" class="w-full py-3 px-6 rounded-lg font-medium transition bg-blue-500 hover:bg-blue-600 text-white shadow-md transform hover:scale-105">
+                Crea Nuovo Task
             </button>
         </form>
-        <div class="space-y-2">
+
+        <div class="flex justify-center space-x-6 mb-6">
+    <a href="?filter=all" 
+       class="px-4 py-2 text-lg font-medium rounded-full transition-colors duration-300 
+              {% if filter_param == 'all' %}bg-blue-500 text-white border-blue-500{% else %}bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100{% endif %}">
+        Tutti
+    </a>
+    <a href="?filter=incomplete" 
+       class="px-4 py-2 text-lg font-medium rounded-full transition-colors duration-300 
+              {% if filter_param == 'incomplete' %}bg-blue-500 text-white border-blue-500{% else %}bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100{% endif %}">
+        Da fare
+    </a>
+    <a href="?filter=completed" 
+       class="px-4 py-2 text-lg font-medium rounded-full transition-colors duration-300 
+              {% if filter_param == 'completed' %}bg-blue-500 text-white border-blue-500{% else %}bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100{% endif %}">
+        Completati
+    </a>
+</div>
+
+        <div class="space-y-6">
             {% for task in tasks %}
-                <a href="{% url 'task' task.id %}"
-                   class="block p-4 rounded-lg border bg-white hover:bg-gray-50 transition shadow-sm hover:shadow">
+                <a href="{% url 'task' task.id %}" class="block p-5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition shadow-lg hover:shadow-2xl">
                     <div class="flex justify-between items-center">
-                        <span class="font-medium text-gray-800 {% if task.completed %}line-through text-gray-400{% endif %}">
+                        <span class="font-medium text-lg text-gray-800 {% if task.completed %}line-through text-gray-400{% endif %}">
                             {{ task.title }}
                         </span>
                         <div>
-                        {% if task.completed %}
-                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">✓</span>
-                        {% else %}
-                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">•</span>
-                        {% endif %}
+                            {% if task.completed %}
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">✓</span>
+                            {% else %}
+                                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">•</span>
+                            {% endif %}
                         </div>
                     </div>
+                    <p class="text-sm text-gray-600 mt-2 {% if task.completed %}line-through text-gray-400{% endif %}">
+                        {{ task.description }}
+                    </p>
                 </a>
             {% empty %}
-                <p class="text-gray-400 text-sm">Nessun task ancora</p>
+                <p class="text-gray-500 text-center">Nessun task ancora.</p>
             {% endfor %}
         </div>
     </div>
