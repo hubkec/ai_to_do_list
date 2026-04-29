@@ -27,11 +27,12 @@ def create_task(request):
 
         if title and description and expiration_date:
             Task.objects.create(
+                author=request.user,
                 title=title,
                 description=description,
                 expiration_date=expiration_date
             )
-            return redirect("create_task")  # or another success URL
+            return redirect("task_list")  
 
     return render(request, 'create_task.html', {
         'title': title,

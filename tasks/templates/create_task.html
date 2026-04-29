@@ -1,7 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Create task{% endblock %}
+{% block title %}Crea task{% endblock %}
 {% block content %}
-    <div class="space-y-4">
-         <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Crea un task</span>
+    <div class="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Crea un nuovo task</h1>
+
+        <form method="POST" action="{% url 'create_task' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="title" class="block text-sm font-medium text-gray-700">Titolo:</label>
+                <input type="text" id="title" name="title" placeholder="Inserisci il titolo del task" class="form-control w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ title }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="block text-sm font-medium text-gray-700">Descrizione:</label>
+                <textarea id="description" name="description" placeholder="Inserisci una descrizione del task" class="form-control w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" required>{{ description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="expiration_date" class="block text-sm font-medium text-gray-700">Data di scadenza:</label>
+                <input type="datetime-local" id="expiration_date" name="expiration_date" class="form-control w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ expiration_date }}" required>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button type="submit" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">Crea Task</button>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-700">← Torna alla lista</a>
+            </div>
+        </form>
     </div>
-    {% endblock %}
+{% endblock %}

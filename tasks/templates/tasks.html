@@ -17,11 +17,13 @@
                         <span class="font-medium text-gray-800 {% if task.completed %}line-through text-gray-400{% endif %}">
                             {{ task.title }}
                         </span>
+                        <div>
                         {% if task.completed %}
                             <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">✓</span>
                         {% else %}
                             <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">•</span>
                         {% endif %}
+                        </div>
                     </div>
                 </a>
             {% empty %}
