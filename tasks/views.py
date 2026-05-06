@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Task
+from django.shortcuts import get_object_or_404
 
 def task_list(request):
     filter_param = request.GET.get('filter', 'all')
@@ -33,12 +34,12 @@ def create_task(request):
         description = request.POST.get('description', '')
         expiration_date = request.POST.get('expiration_date', '')
 
-        if title and description and expiration_date:
+        if title and description:
             Task.objects.create(
                 author=request.user,
                 title=title,
                 description=description,
-                expiration_date=expiration_date
+                expiration_date=expiration_date or None
             )
             return redirect("task_list")  
 
@@ -47,3 +48,8 @@ def create_task(request):
         'description': description,
         'expiration_date': expiration_date
     })
+
+def remove_task(request, id):
+    task = get_object_or_404(Task, pk=id)
+    task.delete()
+    return redirect('task_list')
