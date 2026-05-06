@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .services.ai_service import process_input
+from .services.task_service import handle_action
+
 
 def task_list(request):
     filter_param = request.GET.get('filter', 'all')
@@ -53,3 +57,14 @@ def remove_task(request, id):
     task = get_object_or_404(Task, pk=id)
     task.delete()
     return redirect('task_list')
+
+
+def ai_view(request):
+    user_input = request.GET.get("q")
+
+    data = process_input(user_input)
+    result = handle_action(data, request.user) 
+
+    return JsonResponse({
+        "result": result
+    })

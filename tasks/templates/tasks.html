@@ -55,4 +55,73 @@
             {% endfor %}
         </div>
     </div>
+    <div class="mt-10 border-t pt-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800 text-center">AI Assistant</h2>
+
+    <div id="chat-box" class="h-48 overflow-y-auto border rounded p-3 mb-3 bg-gray-50 text-sm">
+        <!-- messaggi -->
+    </div>
+
+    <div class="flex gap-2">
+        <input 
+            id="chat-input"
+            type="text" 
+            placeholder="Scrivi: compra latte, cancella pane..."
+            class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+        <button 
+            onclick="sendMessage()" 
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
+        >
+            Invia
+        </button>
+    </div>
+</div>
+<script>
+function addMessage(text, sender="user") {
+    const box = document.getElementById("chat-box")
+    const div = document.createElement("div")
+
+    div.className = sender === "user" 
+        ? "text-right mb-2 text-blue-600"
+        : "text-left mb-2 text-gray-700"
+
+    div.innerText = text
+
+    box.appendChild(div)
+    box.scrollTop = box.scrollHeight
+}
+
+function sendMessage() {
+    const input = document.getElementById("chat-input")
+    const text = input.value.trim()
+
+    if (!text) return
+
+    addMessage(text, "user")
+    input.value = ""
+
+    fetch(`/ai/?q=${encodeURIComponent(text)}`)
+        .then(res => res.json())
+        .then(data => {
+            addMessage(data.result, "ai")
+
+            // aggiorna la lista task
+            setTimeout(() => {
+                location.reload()
+            }, 500)
+        })
+        .catch(err => {
+            addMessage("Errore nella richiesta", "ai")
+            console.error(err)
+        })
+}
+
+
+document.getElementById("chat-input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage()
+    }
+})
+</script>
 {% endblock %}
