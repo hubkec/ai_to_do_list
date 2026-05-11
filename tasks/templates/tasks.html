@@ -55,6 +55,10 @@
             {% endfor %}
         </div>
     </div>
+    <div class="mt-4">
+    <h3 class="text-sm text-gray-500 mb-1">Debug JSON</h3>
+    <pre id="debug-box" class="bg-black text-green-400 text-xs p-3 rounded h-40 overflow-y-auto"></pre>
+</div>
     <div class="mt-10 border-t pt-6">
     <h2 class="text-xl font-semibold mb-4 text-gray-800 text-center">AI Assistant</h2>
 
@@ -92,6 +96,33 @@ function addMessage(text, sender="user") {
     box.scrollTop = box.scrollHeight
 }
 
+function refreshTasks() {
+    fetch("/api/tasks/")
+        .then(res => res.json())
+        .then(data => {
+            const container = document.querySelector(".space-y-6")
+
+            container.innerHTML = ""
+
+            data.tasks.forEach(task => {
+                const taskEl = document.createElement("div")
+
+                taskEl.className = "p-4 border rounded bg-white shadow"
+
+                taskEl.innerHTML = `
+                    <div class="flex justify-between">
+                        <span class="${task.completed ? 'line-through text-gray-400' : ''}">
+                            ${task.title}
+                        </span>
+                        <span>${task.completed ? '✓' : '•'}</span>
+                    </div>
+                `
+
+                container.appendChild(taskEl)
+            })
+        })
+}
+
 function sendMessage() {
     const input = document.getElementById("chat-input")
     const text = input.value.trim()
@@ -102,19 +133,17 @@ function sendMessage() {
     input.value = ""
 
     fetch(`/ai/?q=${encodeURIComponent(text)}`)
-        .then(res => res.json())
-        .then(data => {
-            addMessage(data.result, "ai")
+    .then(res => res.json())
+    .then(data => {
+        addMessage(data.result, "ai")
 
-            // aggiorna la lista task
-            setTimeout(() => {
-                location.reload()
-            }, 500)
-        })
-        .catch(err => {
-            addMessage("Errore nella richiesta", "ai")
-            console.error(err)
-        })
+        const debugBox = document.getElementById("debug-box")
+        debugBox.textContent = JSON.stringify(data.debug, null, 2)
+
+      setTimeout(() => {
+        location.reload()
+        }, 500)
+    })
 }
 
 

@@ -7,19 +7,32 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def build_prompt(user_input):
     return f"""
-Sei un parser per una to-do list.
+Sei un assistente per una to-do list.
+
 Rispondi SOLO con JSON valido.
-NON aggiungere testo.
 
 Formato:
-{{"action":"create|delete|list|unknown","title":"string|null"}}
+{{
+  "action":"create|delete|toggle|list|unknown",
+  "title":"string|null",
+  "completed": true | false | null
+}}
+
+Regole:
+- "cancella", "elimina" → delete
+- "completa", "segna come fatto" → toggle (completed = true)
+- "riapri", "non completato" → toggle (completed = false)
 
 Esempi:
-Input: compra latte
-Output: {{"action":"create","title":"compra latte"}}
 
 Input: cancella latte
 Output: {{"action":"delete","title":"latte"}}
+
+Input: completa latte
+Output: {{"action":"toggle","title":"latte"}}
+
+Input: riapri latte
+Output: {{"action":"toggle","title":"latte"}}
 
 ---
 

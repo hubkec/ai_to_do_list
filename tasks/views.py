@@ -61,10 +61,19 @@ def remove_task(request, id):
 
 def ai_view(request):
     user_input = request.GET.get("q")
+    user_input_lower = user_input.lower()
 
     data = process_input(user_input)
-    result = handle_action(data, request.user) 
+
+    if data.get("action") == "toggle" and data.get("completed") is None:
+        if any(word in user_input_lower for word in ["completa", "fatto", "finito"]):
+            data["completed"] = True
+        elif any(word in user_input_lower for word in ["riapri", "non completato"]):
+            data["completed"] = False
+
+    result = handle_action(data, request.user)
 
     return JsonResponse({
-        "result": result
+        "result": result,
+        "debug": data 
     })
