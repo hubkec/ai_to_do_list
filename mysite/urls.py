@@ -14,16 +14,37 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import include, path
+from oauth2_provider import urls as oauth2_urls
 from django.contrib import admin
 from django.urls import path
-from tasks.views import task_list, task_detail, toggle_task, create_task, remove_task, ai_view
+from tasks.views import (
+    task_list,
+    task_detail,
+    toggle_task,
+    create_task,
+    remove_task,
+    ai_view,
+    register,
+    my_profile
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', task_list, name= "task_list"),
-    path('task/<int:id>', task_detail, name= "task"),
+
+    # HTML views
+    path('task/<int:id>', task_detail, name="task"),
     path('task/<int:id>/toggle/', toggle_task, name='toggle_task'),
-    path('task/create/', create_task, name= "create_task"),
     path('task/<int:id>/delete/', remove_task, name='remove_task'),
-    path("ai/", ai_view)
+    path('ai/', ai_view),
+
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
+    # API
+
+    path('api/profile/', my_profile, name="my_profile"),
+    path('api/tasks/', task_list, name="task_list"),
+    path('api/task/<int:id>', task_detail, name="task"),
+    path('api/task/create/', create_task, name="create_task"),
+    path('api/register/', register),
 ]
